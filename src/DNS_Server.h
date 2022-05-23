@@ -16,7 +16,9 @@
 #define DNS_PORT					53
 #define MAX_DNSNAME_LENGTH			64
 #define MAX_DNS_PACKETSIZE			512
-#define MAX_DNS_RECORDS				32
+#ifndef MAX_DNS_RECORDS
+	#define MAX_DNS_RECORDS			32
+#endif
 
 enum class DNSReplyCode
 {
