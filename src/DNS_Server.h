@@ -73,21 +73,28 @@ class DNS_Server
 		 */
 		int16_t findRecord(const char* domainName, uint8_t length = MAX_DNSNAME_LENGTH);
 		/**
-		 * get all ResolvedIPs rules ( max: MAX_DNS_RECORDS )
-		 * @param notching
-		 * @return {const unsigned char*} constant pointer for data
-		 */
-		const unsigned char* getResolvedIPs(void);
-		/**
-		 * get all DomainNames rules ( max: MAX_DNS_RECORDS )
+		 * get DomainName for _readIndx ( max: MAX_DNS_RECORDS )
 		 * @param notching
 		 * @return {const char*} constant pointer for data
 		 */
-		const char* getDomainNames(void);
+		const char* getDomainName(void);
+		/**
+		 * get Resolved IP for _readIndx ( max: MAX_DNS_RECORDS )
+		 * @param notching
+		 * @return {const unsigned char*} constant pointer for data
+		 */
+		const unsigned char* getResolvedIP(void);
+		/**
+		 * get next Rule for _readIndx ( max: MAX_DNS_RECORDS )
+		 * @param notching
+		 * @return {uint8_t} ( 0 if rules end )
+		 */
+		uint8_t nextRule(void);
 	private:
 		WiFiUDP _udp;
 		uint16_t _port;
 		uint32_t _ttl;
+		uint16_t _readIndx;
 		DNSReplyCode _errorReplyCode;
 		char _domainNames[ MAX_DNS_RECORDS ] [ MAX_DNSNAME_LENGTH ];
 		unsigned char _resolvedIPs[ MAX_DNS_RECORDS ] [ 4 ];
