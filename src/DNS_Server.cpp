@@ -326,14 +326,14 @@ void DNS_Server::clearRecords()
 }
 
 //-------------------------------------------------------------------------------
-const unsigned char* getResolvedIPs(void)
+const unsigned char* DNS_Server::getResolvedIPs(void)
 {
 	const unsigned char* pointer = _resolvedIPs;
 	return pointer;
 }
 
 //-------------------------------------------------------------------------------
-const char* getDomainNames(void)
+const char* DNS_Server::getDomainNames(void)
 {
 	const char* pointer = _domainNames;
 	return pointer;
