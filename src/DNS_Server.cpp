@@ -365,9 +365,9 @@ uint8_t DNS_Server::nextRule(void)
 }
 
 //-------------------------------------------------------------------------------
-void DNS_Server::newRequest(DNS_Server::HandlerFunction function = nullptr)
+void DNS_Server::newRequest(void (*func)(const char*, const uint8_t*))
 {
-	m_pCallback = function;
+	m_pCallback = func;
 }
 
 //-------------------------------------------------------------------------------
