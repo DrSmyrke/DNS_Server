@@ -15,7 +15,7 @@ char dnsBuffer[ 256 ];
 //-------------------------------------------------------------------------------
 DNS_Server::DNS_Server()
 {
-	_readIndx = MAX_DNS_RECORDS;
+	m_readIndx = MAX_DNS_RECORDS;
 	_ttl = lwip_htonl(60);
 	m_errorReplyCode = DNSReplyCode::NonExistentDomain;
 	m_pCallback = nullptr;
@@ -332,36 +332,45 @@ void DNS_Server::clearRecords()
 //-------------------------------------------------------------------------------
 const char* DNS_Server::getDomainName(void)
 {
-	if( _readIndx >= MAX_DNS_RECORDS ) _readIndx = 0;
+	if( m_readIndx >= MAX_DNS_RECORDS ) m_readIndx = 0;
 
-	const char* pointer = _domainNames[ _readIndx ];
+	const char* pointer = _domainNames[ m_readIndx ];
 	return pointer;
 }
 
 //-------------------------------------------------------------------------------
 const unsigned char* DNS_Server::getResolvedIP(void)
 {
-	if( _readIndx >= MAX_DNS_RECORDS ) _readIndx = 0;
+	if( m_readIndx >= MAX_DNS_RECORDS ) m_readIndx = 0;
 
-	const unsigned char* pointer = _resolvedIPs[ _readIndx ];
+	const unsigned char* pointer = _resolvedIPs[ m_readIndx ];
 	return pointer;
 }
 
 //-------------------------------------------------------------------------------
 uint8_t DNS_Server::nextRule(void)
 {
-	if( _readIndx >= MAX_DNS_RECORDS ) _readIndx = 0;
+	m_readIndx++;
+	
+	if( m_readIndx >= MAX_DNS_RECORDS ) m_readIndx = 0;
 
 	uint8_t res = 0;
 
-	for( uint16_t i = _readIndx; i < MAX_DNS_RECORDS; i++ ){
+	for( uint16_t i = m_readIndx; i < MAX_DNS_RECORDS; i++ ){
 		if( _resolvedIPs[ i ][ 0 ] != 0 && _resolvedIPs[ i ][ 1 ] != 0 && _resolvedIPs[ i ][ 2 ] != 0 && _resolvedIPs[ i ][ 3 ] != 0 ){
 			res = 1;
+			m_readIndx = i;
 			break;
 		}
 	}
 
 	return res;
+}
+
+//-------------------------------------------------------------------------------
+void DNS_Server::resetRulesIndex(void)
+{
+	m_readIndx = 0;
 }
 
 //-------------------------------------------------------------------------------
