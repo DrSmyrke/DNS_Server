@@ -17,7 +17,8 @@ DNS_Server::DNS_Server()
 {
 	_readIndx = MAX_DNS_RECORDS;
 	_ttl = lwip_htonl(60);
-	_errorReplyCode = DNSReplyCode::NonExistentDomain;
+	m_errorReplyCode = DNSReplyCode::NonExistentDomain;
+	m_pCallback = nullptr;
 	clearRecords();
 }
 
@@ -31,7 +32,7 @@ bool DNS_Server::start(const uint16_t port)
 //-------------------------------------------------------------------------------
 void DNS_Server::setErrorReplyCode(const DNSReplyCode &replyCode)
 {
-	_errorReplyCode = replyCode;
+	m_errorReplyCode = replyCode;
 }
 
 //-------------------------------------------------------------------------------
@@ -203,10 +204,12 @@ void DNS_Server::respondToRequest(uint8_t *buffer, size_t length)
 	// uart_write_bytes( UART_NUM_0, "\n", 1 );
 
 	if( result >= 0 ){
+		if( m_pCallback != nullptr ) m_pCallback( dnsBuffer, _resolvedIPs[ result ] );
 		return replyWithIP( dnsHeader, query, queryLength, _resolvedIPs[ result ] );
 	}
 
-	return replyWithError( dnsHeader, _errorReplyCode, query, queryLength );
+	if( m_pCallback != nullptr ) m_pCallback( dnsBuffer, nullptr );
+	return replyWithError( dnsHeader, m_errorReplyCode, query, queryLength );
 }
 
 //-------------------------------------------------------------------------------
@@ -362,6 +365,11 @@ uint8_t DNS_Server::nextRule(void)
 }
 
 //-------------------------------------------------------------------------------
+void DNS_Server::newRequest(DNS_Server::HandlerFunction function = nullptr)
+{
+	m_pCallback = function;
+}
+
 //-------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------

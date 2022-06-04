@@ -55,8 +55,11 @@ class DNS_Server
 	public:
 		DNS_Server();
 		~DNS_Server() {
-				stop();
+			stop();
 		};
+
+		typedef std::function<void(const char*, const uint8_t*)> HandlerFunction;
+
 		void processNextRequest();
 		void setErrorReplyCode(const DNSReplyCode &replyCode);
 		void setTTL(const uint32_t &ttl);
@@ -78,7 +81,7 @@ class DNS_Server
 		 * @return {const char*} constant pointer for data
 		 */
 		const char* getDomainName(void);
-		/**
+		/**	
 		 * get Resolved IP for _readIndx ( max: MAX_DNS_RECORDS )
 		 * @param notching
 		 * @return {const unsigned char*} constant pointer for data
@@ -90,12 +93,19 @@ class DNS_Server
 		 * @return {uint8_t} ( 0 if rules end )
 		 */
 		uint8_t nextRule(void);
+		/**
+		 * set callback for new request
+		 * @param {DNS_Server::HandlerFunction}
+		 * @return none
+		 */
+		void newRequest(DNS_Server::HandlerFunction function = nullptr);
 	private:
 		WiFiUDP _udp;
 		uint16_t _port;
 		uint32_t _ttl;
 		uint16_t _readIndx;
-		DNSReplyCode _errorReplyCode;
+		DNSReplyCode m_errorReplyCode;
+		DNS_Server::HandlerFunction m_pCallback;
 		char _domainNames[ MAX_DNS_RECORDS ] [ MAX_DNSNAME_LENGTH ];
 		unsigned char _resolvedIPs[ MAX_DNS_RECORDS ] [ 4 ];
 
