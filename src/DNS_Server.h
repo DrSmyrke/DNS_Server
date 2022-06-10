@@ -103,6 +103,11 @@ class DNS_Server
 		 * @return none
 		 */
 		void newRequest(void (*func)(const char*, const uint8_t*));
+		/**
+		 * checking server running
+		 * @return {uint8_t} ( 1 if server running, 0 if server stoped )
+		 */
+		uint8_t isRunning(void);
 	private:
 		WiFiUDP _udp;
 		uint16_t _port;
@@ -112,6 +117,7 @@ class DNS_Server
 		void (*m_pCallback)(const char*, const uint8_t*);
 		char _domainNames[ MAX_DNS_RECORDS ] [ MAX_DNSNAME_LENGTH ];
 		unsigned char _resolvedIPs[ MAX_DNS_RECORDS ] [ 4 ];
+		uint8_t m_running;
 
 		void downcaseAndRemoveWwwPrefix(String &domainName);
 		void replyWithIP(DNSHeader *dnsHeader, unsigned char * query, size_t queryLength, unsigned char* ip);

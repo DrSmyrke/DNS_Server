@@ -19,6 +19,7 @@ DNS_Server::DNS_Server()
 	_ttl = lwip_htonl(60);
 	m_errorReplyCode = DNSReplyCode::NonExistentDomain;
 	m_pCallback = nullptr;
+	m_running = 0;
 	clearRecords();
 }
 
@@ -26,6 +27,7 @@ DNS_Server::DNS_Server()
 bool DNS_Server::start(const uint16_t port)
 {
 	_port = port;
+	m_running = 1;
 	return _udp.begin(_port) == 1;
 }
 
@@ -45,6 +47,7 @@ void DNS_Server::setTTL(const uint32_t &ttl)
 void DNS_Server::stop()
 {
 	_udp.stop();
+	m_running = 0;
 }
 
 //-------------------------------------------------------------------------------
@@ -380,6 +383,11 @@ void DNS_Server::newRequest(void (*func)(const char*, const uint8_t*))
 }
 
 //-------------------------------------------------------------------------------
+uint8_t DNS_Server::isRunning(void)
+{
+	return m_running;
+}
+
 //-------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------
