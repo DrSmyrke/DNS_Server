@@ -57,7 +57,7 @@ void DNS_Server::addRecord(const char* domainName, const IPAddress &resolvedIP)
 	// downcaseAndRemoveWwwPrefix( domainName );
 
 	for( uint16_t i = 0; i < MAX_DNS_RECORDS; i++ ){
-		if( _domainNames[ i ] [ 0 ] == '\0' && _domainNames[ i ] [ 1 ] == '\0' && _domainNames[ i ] [ 2 ] == '\0' ){
+		if( _resolvedIPs[ i ] [ 0 ] == 0 && _resolvedIPs[ i ] [ 1 ] == 0 && _resolvedIPs[ i ] [ 2 ] == 0 && _resolvedIPs[ i ] [ 3 ] == 0 ){
 			strcpy( _domainNames[ i ], domainName );
 			_resolvedIPs[ i ][ 0 ] = resolvedIP[ 0 ];
 			_resolvedIPs[ i ][ 1 ] = resolvedIP[ 1 ];
