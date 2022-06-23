@@ -374,7 +374,7 @@ uint8_t DNS_Server::nextRule(void)
 //-------------------------------------------------------------------------------
 void DNS_Server::resetRulesIndex(void)
 {
-	m_readIndx = 0;
+	m_readIndx = MAX_DNS_RECORDS;
 }
 
 //-------------------------------------------------------------------------------
