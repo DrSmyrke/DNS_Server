@@ -92,6 +92,7 @@ int16_t DNS_Server::findRecord(const char* domainName, uint8_t length)
 	if( !j ) return -2;
 
 	for( i = 0; i < MAX_DNS_RECORDS; i++ ){
+		if( _resolvedIPs[ i ] [ 0 ] == 0 && _resolvedIPs[ i ] [ 1 ] == 0 && _resolvedIPs[ i ] [ 2 ] == 0 && _resolvedIPs[ i ] [ 3 ] == 0 ) continue;
 		size_t len = strlen( _domainNames[ i ] );
 		if( strncasecmp( start, _domainNames[ i ], len ) == 0 || ( len == 1 && _domainNames[ i ][ 0 ] == '*' ) ){
 			res = i;
